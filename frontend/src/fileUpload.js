@@ -6,6 +6,8 @@ import axios from "axios";
 const FileUpload = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Set the expected number of columns in your CSV file
   const expectedNumberOfColumns = 7;
@@ -64,14 +66,16 @@ const FileUpload = () => {
       formData.append("csvFile", new Blob([Papa.unparse(file)], { type: "text/csv" }));
 
       // Make an API call to the backend
-      axios.post("https://noapp.onrender.com/upload", formData)
+      axios.post("http://localhost:5000/upload", formData)
         .then((response) => {
           // Handle the success response, e.g., show a success message
           console.log(response.data.message);
+          setSuccessMessage(`Data uploaded successfully. Records processed: ${response.data.recordsProcessed}`);
         })
         .catch((error) => {
           // Handle errors, e.g., show an error message
           console.error("Error uploading file:", error.response.data.error);
+          setErrorMessage("")
         });
     } else {
       setError("Please select a valid CSV file before submitting.");
@@ -83,6 +87,8 @@ const FileUpload = () => {
       <input type="file" onChange={handleFileChange} />
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button onClick={handleSubmit}>Submit</button>
+      {successMessage && <div>{successMessage}</div>}
+      {errorMessage && <div>{errorMessage}</div>}
     </div>
   );
 };

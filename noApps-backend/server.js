@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const csv = require("csv-parser");
 const fs = require("fs");
+const Stream= require('stream'  )
 require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -52,16 +53,15 @@ const storage = multer.memoryStorage();
   
       // Reading the uploaded file and inserting data into the database
       const results = [];
-      fs.createReadStream(req.file.path)
+      Stream.Readable.from(req.file.buffer)
         .pipe(csv())
         .on("data", (data) => results.push(data))
         .on("end", async () => {
           try {
             // Inserting data into the MongoDB database
-            console.log("results----",results);
-            await User.insertMany(results);
+            console.log("results----",results,results.length);
             console.log("after await----");
-            return res.json({ message: "Data stored successfully" });
+            return res.json({ message: "Data stored successfully",recordsProcessed:results.length });
           } catch (error) {
             console.error("Error storing data:", error);
             return res.status(500).json({ error: "Error storing data",error });
