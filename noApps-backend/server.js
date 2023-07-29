@@ -54,7 +54,7 @@ const storage = multer.diskStorage({
   app.post("/upload", (req, res) => {
     upload(req, res, async (err) => {
       if (err) {
-        return res.status(400).json({ error: "Error uploading file" });
+        return res.status(502).json({ error: "Error uploading file",err });
       }
   
       // Reading the uploaded file and inserting data into the database
