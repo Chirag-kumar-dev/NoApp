@@ -63,11 +63,7 @@ const storage = multer.diskStorage({
         .pipe(csv())
         .on("data", (data) => results.push(data))
         .on("end", async () => {
-          // Removing the temporary uploaded file
-          fs.unlinkSync(req.file.path);
-
           try {
-  
             // Inserting data into the MongoDB database
             console.log("results----",results);
             await User.insertMany(results);
@@ -75,7 +71,7 @@ const storage = multer.diskStorage({
             return res.json({ message: "Data stored successfully" });
           } catch (error) {
             console.error("Error storing data:", error);
-            return res.status(500).json({ error: "Error storing data" });
+            return res.status(500).json({ error: "Error storing data",error });
           }
         });
     });
