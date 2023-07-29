@@ -64,7 +64,7 @@ const FileUpload = () => {
       formData.append("csvFile", new Blob([Papa.unparse(file)], { type: "text/csv" }));
 
       // Make an API call to the backend
-      axios.post("http://localhost:5000/upload", formData)
+      axios.post("https://noapp.onrender.com/upload", formData)
         .then((response) => {
           // Handle the success response, e.g., show a success message
           console.log(response.data.message);
